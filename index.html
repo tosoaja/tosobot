@@ -1,93 +1,84 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Toso QnA</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      font-family: sans-serif;
+      background: linear-gradient(120deg, #ff9933, #cc3300);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
+      margin: 0;
     }
-    .card {
+    .container {
       background: white;
-      padding: 2rem;
+      padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
       width: 90%;
       max-width: 400px;
-      text-align: center;
-    }
-    h2 {
-      margin-top: 0;
     }
     input, textarea {
       width: 100%;
-      padding: 0.8rem;
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
+      padding: 10px;
+      margin: 10px 0;
       border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
     }
     button {
-      background-color: #ff6b6b;
+      padding: 10px 20px;
+      background-color: #cc3300;
       color: white;
-      padding: 0.8rem 1.5rem;
       border: none;
       border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 1rem;
     }
     button:hover {
-      background-color: #ff4d4d;
-    }
-    .footer {
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: #777;
+      background-color: #b32900;
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="container">
     <h2>Toso QnA</h2>
-    <p>Ask your question below:</p>
-    <input type="text" id="name" placeholder="Your name or number"/>
-    <textarea id="question" rows="4" placeholder="Type your question here..."></textarea>
-    <button onclick="sendMessage()">Send</button>
-    <div class="footer">© 2024 Toso Question</div>
+    <input type="text" id="name" placeholder="Nama Kamu" />
+    <textarea id="question" rows="4" placeholder="Pertanyaan Kamu"></textarea>
+    <button onclick="sendMessage()">Kirim</button>
   </div>
 
   <script>
-    async function sendMessage() {
+    function sendMessage() {
       const name = document.getElementById("name").value.trim();
       const question = document.getElementById("question").value.trim();
-      if (!name || !question) return alert("Please fill in all fields.");
 
-      try {
-        const res = await fetch("https://tosoapi.akunsecond1024.workers.dev/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, question })
-        });
-
-        const data = await res.json();
-        if (data.ok) {
-          alert("Your question has been sent!");
-          document.getElementById("name").value = "";
-          document.getElementById("question").value = "";
-        } else {
-          alert("Failed to send message.");
-        }
-      } catch (err) {
-        alert("Failed to send message.");
+      if (!name || !question) {
+        alert("Isi nama dan pertanyaan dulu ya!");
+        return;
       }
+
+      fetch("https://script.google.com/macros/s/AKfycbx5TM00Ne5Uo8g7VeO7BWyvkbis0RinGNQvvpL1NhWylaAq_5BOMWABxZ_JCc6c31XsZg/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name: name, question: question })
+      })
+      .then(response => response.text())
+      .then(data => {
+        alert("Pertanyaan berhasil dikirim!");
+        document.getElementById("name").value = "";
+        document.getElementById("question").value = "";
+      })
+      .catch(error => {
+        alert("Gagal mengirim pertanyaan: " + error);
+      });
     }
   </script>
 </body>
