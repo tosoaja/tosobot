@@ -1,85 +1,83 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Toso QnA</title>
   <style>
     body {
       font-family: sans-serif;
-      background: linear-gradient(120deg, #ff9933, #cc3300);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      background-color: #f5f5f5;
+      padding: 20px;
     }
-    .container {
+    .form-container {
       background: white;
-      padding: 30px;
+      padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      text-align: center;
-      width: 90%;
       max-width: 400px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    input, textarea {
+    input, textarea, button {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      margin-top: 10px;
       border-radius: 8px;
       border: 1px solid #ccc;
-      font-size: 16px;
+      box-sizing: border-box;
     }
     button {
-      padding: 10px 20px;
-      background-color: #cc3300;
+      background-color: #4CAF50;
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
+      font-weight: bold;
     }
-    button:hover {
-      background-color: #b32900;
+    #hasil {
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Toso QnA</h2>
-    <input type="text" id="name" placeholder="Nama Kamu" />
-    <textarea id="question" rows="4" placeholder="Pertanyaan Kamu"></textarea>
-    <button onclick="sendMessage()">Kirim</button>
+  <div class="form-container">
+    <h2>Kirim Pertanyaan</h2>
+    <form id="tosoForm">
+      <label>Nama:</label>
+      <input type="text" id="nama" required>
+      
+      <label>Pertanyaan:</label>
+      <textarea id="pertanyaan" required></textarea>
+      
+      <button type="submit">Kirim ke Telegram</button>
+    </form>
+    <p id="hasil"></p>
   </div>
 
   <script>
-    function sendMessage() {
-      const name = document.getElementById("name").value.trim();
-      const question = document.getElementById("question").value.trim();
+    document.getElementById("tosoForm").addEventListener("submit", function(e) {
+      e.preventDefault();
 
-      if (!name || !question) {
-        alert("Isi nama dan pertanyaan dulu ya!");
-        return;
-      }
+      const data = {
+        name: document.getElementById("nama").value,
+        question: document.getElementById("pertanyaan").value
+      };
 
       fetch("https://script.google.com/macros/s/AKfycbzLftLp8SPtKji3nYRj2iuVOLASWVUaiOqpbjwSbsjxLIdg0hzUmxhPKCotS1ZOyJOmxw/exec", {
         method: "POST",
+        body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ name: name, question: question })
+        }
       })
-      .then(response => response.text())
-      .then(data => {
-        alert("Pertanyaan berhasil dikirim!");
-        document.getElementById("name").value = "";
-        document.getElementById("question").value = "";
+      .then(res => res.text())
+      .then(res => {
+        document.getElementById("hasil").innerText = res;
+        document.getElementById("tosoForm").reset();
       })
-      .catch(error => {
-        alert("Gagal mengirim pertanyaan: " + error);
+      .catch(err => {
+        document.getElementById("hasil").innerText = "Gagal kirim: " + err;
       });
-    }
+    });
   </script>
 </body>
 </html>
