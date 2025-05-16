@@ -71,7 +71,7 @@
       if (!name || !question) return alert("Please fill in all fields.");
 
       try {
-        const res = await fetch("https://tosoapi.akunsecond1024.workers.dev/", {
+        const res = await fetch("https://tosoapi.akunsecond1024.workers.dev", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, question })
